@@ -220,23 +220,21 @@ tcounter = Thread.new do
   end
 end
 
+# check links & squid every 10 seconds
+tcheker = Thread.new do
+  Rails.logger.debug "sequreispd: #{Time.now.to_s} check_physical_links"
+  check_physical_links
+  Rails.logger.debug "sequreispd: #{Time.now.to_s} check_links"
+  check_links
+  check_squid if Configuration.transparent_proxy
+  sleep 30
+end
+
 #esto va como param a method
 tsleep = 1
-tsleep_count = 0
+#tsleep_count = 0
 while($running) do
-  Rails.logger.debug "sequreispd: #{Time.now.to_s} lap tsleep_count: #{tsleep_count}"
   Configuration.do_reload
-  tsleep_count += 1
-
-  # check links & squid every 10 seconds
-  if tsleep_count%10 == 0
-    tsleep_count = 0
-    Rails.logger.debug "sequreispd: #{Time.now.to_s} check_physical_links"
-    check_physical_links
-    Rails.logger.debug "sequreispd: #{Time.now.to_s} check_links"
-    check_links
-    check_squid if Configuration.transparent_proxy
-  end
 
   Rails.logger.debug "sequreispd: #{Time.now.to_s} DaemonHook"
   # run plugins hooks
@@ -258,3 +256,4 @@ while($running) do
 end
 
 tcounter.join
+tcheker.join
