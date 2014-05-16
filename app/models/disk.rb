@@ -5,6 +5,8 @@ class Disk < ActiveRecord::Base
   watch_fields :cache, :free
   watch_on_destroy
 
+  validates_presence_of :name
+
   named_scope :system, :conditions => {:system => true}
   named_scope :cache, :conditions => {:cache => true}
   named_scope :free, :conditions => {:free => true}
@@ -28,11 +30,12 @@ class Disk < ActiveRecord::Base
   def self.scan
     disks = {}
     aux =`sudo /usr/bin/lshw -C disk`.strip.split("*-")
+    aux.delete("")
     system_disks = used_for_system
     cache_disks = used_for_cache
 
     aux.each do |disk|
-      if disk.include?("disk")
+      if disk.include?("disk") and disk.include?("logical name")
         name = ""
         capacity = ""
         serial = ""
