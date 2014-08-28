@@ -30,11 +30,13 @@ class UserSessionsController < ApplicationController
   
   def create
     @user_session = UserSession.new(params[:user_session])
-    if @user_session.save
-      flash.discard
-      redirect_back_or_default eval(current_user.default_path) if current_user
-    else
-      render :action => :new
+    @user_session.save do |result|
+      if result
+        flash.discard
+        redirect_back_or_default eval(current_user.default_path) if current_user
+      else
+        render :action => :new
+      end
     end
   end
   

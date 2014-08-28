@@ -18,4 +18,10 @@
 class UserSession < Authlogic::Session::Base
   logout_on_timeout true
   consecutive_failed_logins_limit 35
+  def self.oauth_consumer
+    OAuth::Consumer.new("0EUnt3SWFDKxOuaD0XJz1ajFH3WYc7P2sbBpqzWJ", "QjYCiiqc69uz9ntcbYE4IpoTOVZ5fj65jTyXsM9W",
+    { :site=>"http://0.0.0.0:3000",
+      :authorize_url => "http://0.0.0.0:3000/oauth/authorize"
+    })
+  end
 end

@@ -60,13 +60,15 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
 
     respond_to do |format|
-      if @user.save
-        flash[:notice] = t 'controllers.successfully_created'
-        format.html { redirect_back_from_edit_or_to(users_path) }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+      @user.save do |result|
+        if result
+          flash[:notice] = t 'controllers.successfully_created'
+          format.html { redirect_back_from_edit_or_to(users_path) }
+          format.xml  { render :xml => @user, :status => :created, :location => @user }
+        else
+          format.html { render :action => "new" }
+          format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+        end
       end
     end
   end

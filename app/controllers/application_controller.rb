@@ -31,6 +31,7 @@ class ApplicationController < ActionController::Base
   filter_parameter_logging :password, :password_confirmation
   helper_method :current_user_session, :current_user
   
+  before_filter :puts_session
   before_filter :set_time_zone
   before_filter :set_language
   # uncomment to be able to see error pages in development
@@ -47,6 +48,9 @@ class ApplicationController < ActionController::Base
 
 
   private
+  def puts_session
+    puts session.inspect
+  end
 
   def store_request_uri
     # skip if it is not html (ie ajax)

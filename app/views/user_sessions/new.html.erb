@@ -37,6 +37,8 @@
       <%= f.password_field :password %>
     <% end %>
     <%= f.submit t('buttons.login'), :class => "btn_submit btn_login" %>
+    <%= oauth_login_button :value => "Login with oauth" %>
+    <%= oauth_register_button :value => "Register with OAUTH" %>
   <% end %>
 </div>
 <div class="img_login"></div>
